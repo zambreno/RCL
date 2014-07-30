@@ -1,0 +1,1 @@
+vhdtdtfi -prj cygraph -o /home/ogamal/convey/parallelcygraph/parallelCyGraph/vhdl/project/process3.vhi -module process3 -template /remote/Xilinx/13.4/ISE//data/vhdlinst.tft -deleteonerror -lib work ../process3.vhd 

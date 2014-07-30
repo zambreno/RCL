@@ -1,0 +1,37 @@
+#
+# Copyright 2011 Convey Computer Corp. 
+#
+
+# DEFAULT LOCATION FOR DEVELOPMENT
+export CNY_PDK = /opt/convey/pdk
+export CNY_PDK_REV = 2011_11_22
+export CNY_PDK_PLATFORM = hc-1
+
+# Personality can be built with or without a crossbar
+export MC_XBAR = 1
+
+# Personality requires read ordering
+export MC_READ_ORDER = 1
+
+# Enable AE-to-AE interface
+export AE_AE_IF = 1
+
+# Include Coregen files
+USER_VHDL_FILES+=../coregen/fifo_generator_32_512.vhd
+USER_VHDL_FILES+=../coregen/fifo_generator_64_512.vhd
+
+# Include VHDL files
+USER_VHDL_FILES+=../vhdl/cygraph.vhd
+USER_VHDL_FILES+=../vhdl/cygraph_kernel.vhd
+USER_VHDL_FILES+=../vhdl/master.vhd
+USER_VHDL_FILES+=../vhdl/process1.vhd
+USER_VHDL_FILES+=../vhdl/process2.vhd
+USER_VHDL_FILES+=../vhdl/process3.vhd
+
+# Personality supports asynchronous core clock
+#   CLK_PERS_RATIO = 0 for synchronous (default)
+#   CLK_PERS_RATIO = 2 for async frequency between 75 and 300 MHz
+
+# DO NOT REMOVE ITEMS BELOW THIS LINE
+include $(CNY_PDK)/$(CNY_PDK_REV)/$(CNY_PDK_PLATFORM)/lib/MakefileInclude.cnypdk
+

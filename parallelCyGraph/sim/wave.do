@@ -1,0 +1,307 @@
+onerror {resume}
+quietly virtual signal -install /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0 { /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(63 downto 32)} p2Start
+quietly virtual signal -install /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0 { /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(31 downto 1)} p2_rsp_count
+quietly WaveActivateNextPane {} 0
+add wave -noupdate -divider Personality
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/reset_per
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cae_inst
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cae_inst_vld
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cae_ret_data_vld
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cae_idle
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cae_stall
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/inst_caep
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/inst_val
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_enable
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_busy
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_done
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/c_caep00
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/r_caep00
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cy_en
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cy_n
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/non_zeros
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/graphData
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/graphInfo
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/queue1_address
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/queue2_address
+add wave -noupdate -divider {Kernel 0}
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/clk
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/rst
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/enable
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/busy
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/done
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/kernel_id
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/kernels_count
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/current_level
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/cq_count
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/kernel_tx_done
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/kernel_tx_vld
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/kernel_tx_count
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/kernel_rx_done
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/kernel_rx_vld
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/kernel_rx_count
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/graphData
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/graphInfo
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/cq_address
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/nq_address
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/mc_req_ld
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/mc_req_st
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/mc_req_size
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/mc_req_vaddr
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/mc_req_wrd_rdctl
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/mc_rd_rq_stall
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/mc_wr_rq_stall
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/mc_rsp_push
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/mc_rsp_stall
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/mc_rsp_data
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/mc_rsp_rdctl
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/started
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/wr_offset
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/wr_demand_count
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/wr_reserved_space
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/wr_used_space
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/out_done
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/out_kernel_tx_vld
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_done
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_count
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_offset
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_req_q_almost_full
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_req_q_wr_en
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_req_q_rd_enb
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_req_q_rd_en
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_req_q_din
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_req_q_dout
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_req_q_valid
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_req_q_full
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_req_q_empty
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_almost_full
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_wr_en
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_rd_enb
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_rd_en
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_din
+add wave -noupdate -label p1_rsp_start -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2Start
+add wave -noupdate /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_rsp_count
+add wave -noupdate -radix hexadecimal -childformat {{/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(63) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(62) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(61) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(60) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(59) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(58) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(57) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(56) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(55) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(54) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(53) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(52) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(51) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(50) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(49) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(48) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(47) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(46) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(45) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(44) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(43) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(42) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(41) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(40) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(39) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(38) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(37) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(36) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(35) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(34) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(33) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(32) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(31) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(30) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(29) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(28) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(27) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(26) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(25) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(24) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(23) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(22) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(21) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(20) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(19) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(18) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(17) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(16) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(15) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(14) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(13) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(12) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(11) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(10) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(9) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(8) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(7) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(6) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(5) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(4) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(3) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(2) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(1) -radix hexadecimal} {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(0) -radix hexadecimal}} -subitemconfig {/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(63) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(62) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(61) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(60) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(59) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(58) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(57) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(56) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(55) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(54) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(53) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(52) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(51) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(50) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(49) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(48) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(47) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(46) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(45) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(44) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(43) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(42) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(41) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(40) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(39) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(38) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(37) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(36) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(35) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(34) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(33) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(32) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(31) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(30) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(29) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(28) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(27) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(26) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(25) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(24) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(23) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(22) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(21) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(20) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(19) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(18) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(17) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(16) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(15) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(14) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(13) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(12) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(11) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(10) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(9) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(8) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(7) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(6) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(5) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(4) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(3) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(2) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(1) {-height 14 -radix hexadecimal} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout(0) {-height 14 -radix hexadecimal}} /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_dout
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_valid
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_full
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p1_rsp_q_empty
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_done
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_count_1
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_count_2
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_req_q_almost_full
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_req_q_wr_en
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_req_q_rd_enb
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_req_q_rd_en
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_req_q_din
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_req_q_dout
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_req_q_valid
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_req_q_full
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_req_q_empty
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_rsp_q_almost_full
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_rsp_q_wr_en
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_rsp_q_rd_enb
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_rsp_q_rd_en
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_rsp_q_din
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_rsp_q_dout
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_rsp_q_valid
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_rsp_q_full
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2_rsp_q_empty
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3_done
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3_count
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3_req_q_almost_full
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3_req_q_wr_en
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3_req_q_rd_enb
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3_req_q_rd_en
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3_req_q_din
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3_req_q_dout
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3_req_q_valid
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3_req_q_full
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3_req_q_empty
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3_rsp_q_almost_full
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3_rsp_q_wr_en
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3_rsp_q_rd_enb
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3_rsp_q_rd_en
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3_rsp_q_din
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3_rsp_q_dout
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3_rsp_q_valid
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3_rsp_q_full
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3_rsp_q_empty
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p4_done
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p4_count
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p4_state
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p4_addr_q_almost_full
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p4_addr_q_wr_en
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p4_addr_q_rd_enb
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p4_addr_q_rd_en
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p4_addr_q_din
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p4_addr_q_dout
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p4_addr_q_valid
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p4_addr_q_full
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p4_addr_q_empty
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p4_info_q_almost_full
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p4_info_q_wr_en
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p4_info_q_rd_enb
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p4_info_q_rd_en
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p4_info_q_din
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p4_info_q_dout
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p4_info_q_valid
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p4_info_q_full
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p4_info_q_empty
+add wave -noupdate -divider {Master Process}
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/clk
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/rst
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/enable
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/busy
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/done
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/started
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/state
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/mux_state
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/mux_green_light
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/saved_state
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/saved_addr
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/saved_data
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/used_space
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/done_count
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/current_level
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/kernel_rx_vld
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/wr_offset
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/wr_reserved_space
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/wr_used_space
+add wave -noupdate /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/local_offset
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/nq_address
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/mc_req_ld
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/mc_req_st
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/mc_req_size
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/mc_req_vaddr
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/mc_req_wrd_rdctl
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/mc_rd_rq_stall
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/mc_wr_rq_stall
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p1_req_q_rd_enb
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p1_req_q_dout
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p1_req_q_valid
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p1_req_q_empty
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p2_req_q_rd_enb
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p2_req_q_dout
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p2_req_q_valid
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p2_req_q_empty
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p3_req_q_rd_enb
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p3_req_q_dout
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p3_req_q_valid
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p3_req_q_empty
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p4_done
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p4_addr_q_rd_enb
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p4_addr_q_dout
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p4_addr_q_valid
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p4_addr_q_empty
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p4_info_q_rd_enb
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p4_info_q_dout
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p4_info_q_valid
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p4_info_q_empty
+add wave -noupdate -divider {Process 2}
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/started
+add wave -noupdate /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/p2_state
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/p2_done
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/p2_count_1
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/p2_count_2
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/graphData
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/p2_busy
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/p1_done
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/p1_count
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/p1_rsp_q_rd_en
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/p1_rsp_q_rd_enb
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/p1_rsp_q_dout
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/p1_rsp_q_valid
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/p1_rsp_q_empty
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/p2_req_q_almost_full
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/p2_req_q_wr_en
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/p2_req_q_din
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/p2_done_out
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/count_1
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/count_2
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p0/p2_req_count_debug
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/p2_start_index
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p2/p2_neigh_count
+add wave -noupdate -divider {Process 3}
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3/started
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3/p3_done
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3/p3_count
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3/graphInfo
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3/p2_done
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3/p2_count_2
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3/p3_req_q_almost_full
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3/p3_req_q_wr_en
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3/p3_req_q_din
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3/p3_req_q_full
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3/mc_rsp_push
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3/mc_rsp_data
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3/mc_rsp_rdctl
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k0/p3/count
+TreeUpdate [SetDefaultTree]
+quietly WaveActivateNextPane
+add wave -noupdate -divider {Master Kernel}
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/clk
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/rst
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/enable
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/busy
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/done
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/n_in
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/non_zeros_in
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/graphData_in
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/graphInfo_in
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/queue1_address_in
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/queue2_address_in
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/n
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/non_zeros
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/graphData
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/graphInfo
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/queue1_address
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/queue2_address
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/kernels_count
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/current_level
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/cq_count
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/q_switch
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/cygraph_state
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/kernel_enable
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/kernel_done
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/kernel_busy
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/cq_address
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/nq_address
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/kernel_tx_done
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/kernel_tx_vld
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/kernel_tx_count
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/master_tx_done
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/master_tx_vld
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/master_tx_count
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/k2k_start
+add wave -noupdate -divider {Memory Controller}
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/clk
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/mc_req_ld
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/mc_req_st
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/mc_req_size
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/mc_req_vaddr
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/mc_req_wrd_rdctl
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/mc_req_flush
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/mc_rd_rq_stall
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/mc_wr_rq_stall
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/mc_rsp_stall
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/mc_rsp_push
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/mc_rsp_data
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/mc_rsp_rdctl
+add wave -noupdate -radix hexadecimal /testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/mc_rsp_flush_cmplt
+TreeUpdate [SetDefaultTree]
+WaveRestoreCursors {{Cursor 1} {49601206 ps} 0}
+quietly wave cursor active 1
+configure wave -namecolwidth 150
+configure wave -valuecolwidth 115
+configure wave -justifyvalue left
+configure wave -signalnamewidth 1
+configure wave -snapdistance 10
+configure wave -datasetprefix 0
+configure wave -rowmargin 4
+configure wave -childrowmargin 2
+configure wave -gridoffset 0
+configure wave -gridperiod 1
+configure wave -griddelta 40
+configure wave -timeline 0
+configure wave -timelineunits ps
+update
+WaveRestoreZoom {36137413 ps} {103738343 ps}

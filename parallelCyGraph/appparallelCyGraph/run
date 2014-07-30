@@ -1,0 +1,34 @@
+#!/bin/sh
+
+export CNY_PERSONALITY_PATH=../personalities
+export CNY_RUNTIME_STARTUP_DEBUG=0
+export CNY_SIM_THREAD=libcpSimLib2.so
+export CNY_CAE_EMULATOR=../sim/CaeSimPers
+export CNY_CALL_STATS=1
+
+#export CNY_PDK_CLIENT_MODE=win|debug
+#export CNY_PDK_CLIENT_MODE=debug
+
+if [ "$1" = "-gdb" ] ; then
+
+	echo "./parallelCyGraphApp.exe"
+
+	shift
+	/opt/convey/bin/gdb --args ./parallelCyGraphApp.exe $@
+
+elif [ "$1" = "-vsim" ] ; then
+
+	shift
+
+	export CNY_CAE_EMULATOR=./run_simulation
+	./parallelCyGraphApp.exe $@
+
+else
+
+	if [ ! -e $CNY_CAE_EMULATOR ] ; then 
+		make -C ../sim sim_swmodel
+	fi
+
+	./parallelCyGraphApp.exe $@
+
+fi
