@@ -1,0 +1,27 @@
+#General envs to setup
+export PATH=$PATH:/opt/convey/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/convey/lib 
+export CNY_PDK=/opt/convey/pdk
+export CNY_PDK_REV=2012_03_19
+#export CNY_PDK_REV=2011_11_22
+export CNY_PDK_HDLSIM=Mentor
+export CNY_PDK_SIMMODE=64
+
+# For running SW model or Modelsim
+# export CNY_SIM_THREAD=libcpSimLib2.so
+
+# For running on HW
+#export CNY_SIM_THREAD=
+
+# for software emulation
+# export CNY_CAE_EMULATOR=<loction of CaeSimPers>
+# Example location ~/temp_sample_app/cae_pers_vadd/CaeSimPers/CaeSimPers
+
+# for Modelsim simulation
+#export CNY_CAE_EMULATOR=./run_simulation
+
+#for running on HW
+export CNY_CAE_EMULATOR=
+
+#see Chap 12 of Convey Programmers Guide v1.8 for more environment variables
+
