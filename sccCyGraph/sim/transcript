@@ -1,0 +1,28 @@
+# //  ModelSim SE-64 10.1c Jul 27 2012 Linux 2.6.32-431.29.2.el6.x86_64
+# //
+# //  Copyright 1991-2012 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  THIS WORK CONTAINS TRADE SECRET AND PROPRIETARY INFORMATION
+# //  WHICH IS THE PROPERTY OF MENTOR GRAPHICS CORPORATION OR ITS
+# //  LICENSORS AND IS SUBJECT TO LICENSE TERMS.
+# //
+# OpenFile vsim.wlf 
+do wavebfsfull.do
+# ** Error: (vish-4014) No objects found matching '/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/kernel_enable'.
+# Executing ONERROR command at macro ./wavebfsfull.do line 246
+# ** Error: (vish-4014) No objects found matching '/testbench/cae_fpga0/ae_top/core/cae_pers/cygraph_inst/kernel_busy'.
+# Executing ONERROR command at macro ./wavebfsfull.do line 248
+# ** Error: (vish-4014) No objects found matching '/testbench/cae_fpga1/ae_top/core/cae_pers/cygraph_inst/kernel_enable'.
+# Executing ONERROR command at macro ./wavebfsfull.do line 346
+# ** Error: (vish-4014) No objects found matching '/testbench/cae_fpga1/ae_top/core/cae_pers/cygraph_inst/kernel_busy'.
+# Executing ONERROR command at macro ./wavebfsfull.do line 348
+# ** Error: (vish-4014) No objects found matching '/testbench/cae_fpga2/ae_top/core/cae_pers/cygraph_inst/kernel_enable'.
+# Executing ONERROR command at macro ./wavebfsfull.do line 398
+# ** Error: (vish-4014) No objects found matching '/testbench/cae_fpga2/ae_top/core/cae_pers/cygraph_inst/kernel_busy'.
+# Executing ONERROR command at macro ./wavebfsfull.do line 400
+# ** Error: (vish-4014) No objects found matching '/testbench/cae_fpga3/ae_top/core/cae_pers/cygraph_inst/kernel_enable'.
+# Executing ONERROR command at macro ./wavebfsfull.do line 450
+# ** Error: (vish-4014) No objects found matching '/testbench/cae_fpga3/ae_top/core/cae_pers/cygraph_inst/kernel_busy'.
+# Executing ONERROR command at macro ./wavebfsfull.do line 452
+# Window cannot be closed because the modal window "Quit Vsim" is still open.

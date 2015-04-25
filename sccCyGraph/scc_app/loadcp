@@ -1,0 +1,9 @@
+#!/bin/sh
+
+export CNY_PERSONALITY_PATH=../personalities
+
+/opt/convey/sbin/mpcache --flush
+#/opt/convey/sbin/mpcache --add --signature 65077.1.1.1.0
+#/opt/convey/sbin/mpcache --load --signature 65077.1.1.1.0
+/opt/convey/sbin/mpcache --add --signature 65077.1.1.2.0
+/opt/convey/sbin/mpcache --load --signature 65077.1.1.2.0

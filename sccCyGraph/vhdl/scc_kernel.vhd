@@ -1,0 +1,945 @@
+-- Author:         Osama G. Attia
+-- email:          ogamal [at] iastate dot edu
+-- Create Date:    16:48:40 06/23/2014 
+-- Module Name:    scc_kernel - Behavioral 
+
+library ieee;
+	use ieee.std_logic_1164.all;
+	use ieee.numeric_std.all;
+
+library unisim;
+	use unisim.vcomponents.all;
+
+entity scc_kernel is
+	port (
+		-- control signals
+		clk                  : in std_logic;
+		rst                  : in std_logic;
+		enable               : in std_logic;
+		busy                 : out std_logic;	-- 0 processing, 1 otherwise
+		done                 : out std_logic;	-- 1 done processing, 0 other
+		-- Kernel Parameters
+		kernel_id            : in unsigned(7 downto 0); -- Kernel ID
+		ae_id                : in std_logic_vector(1 downto 0); -- Application Engine ID
+		kernels_count        : in unsigned(7 downto 0);
+		-- kernels communication signals
+		kernel_tx_vld        : out std_logic;	-- 1 if found nextv
+		kernel_tx_nextv      : out std_logic_vector(63 downto 0);
+		kernel_rx_vld        : in std_logic;
+		kernel_rx_nextv      : in std_logic_vector(63 downto 0);
+		-- Input Graph Prameters (Represented in Custom CSR)
+		N                    : in std_logic_vector(63 downto 0);
+		graph_info           : in std_logic_vector(63 downto 0);
+		rgraph_info          : in std_logic_vector(63 downto 0);
+		-- SCC intersection parameters
+		color                : in std_logic_vector(63 downto 0); -- Color to be used to color nodes
+		fw_queue             : in std_logic_vector(63 downto 0); -- FW Reach queue pointer (could be FW or BW reach queue)
+		fw_count             : in std_logic_vector(63 downto 0); -- Number of nodes in FW reach queue
+		bw_queue             : in std_logic_vector(63 downto 0); -- BW Reach queue pointer (could be FW or BW reach queue)
+		bw_count             : in std_logic_vector(63 downto 0); -- Number of nodes in BW reach queue
+		scc_results          : in std_logic_vector(63 downto 0); -- Where we store the color of each node
+		-- Parameters for next kernel
+		nxtk_rst             : out std_logic;
+		nxtk_enable          : out std_logic;
+		nextk_busy           : in std_logic;
+		nextk_done           : in std_logic;
+		nxtk_N               : out std_logic_vector(63 downto 0);
+		nxtk_graph_info      : out std_logic_vector(63 downto 0);
+		nxtk_rgraph_info     : out std_logic_vector(63 downto 0);
+		nxtk_color           : out std_logic_vector(63 downto 0);
+		nxtk_fw_queue        : out std_logic_vector(63 downto 0);
+		nxtk_fw_count        : out std_logic_vector(63 downto 0);
+		nxtk_bw_queue        : out std_logic_vector(63 downto 0);
+		nxtk_bw_count        : out std_logic_vector(63 downto 0);
+		nxtk_scc_results     : out std_logic_vector(63 downto 0);
+		-- MC request port signals
+		mc_req_ld            : out std_logic;
+		mc_req_st            : out std_logic;
+		mc_req_size          : out std_logic_vector(1 downto 0);
+		mc_req_vaddr         : out std_logic_vector(47 downto 0);
+		mc_req_wrd_rdctl     : out std_logic_vector(63 downto 0);
+		mc_rd_rq_stall       : in std_logic;
+		mc_wr_rq_stall       : in std_logic;
+		-- MC response port signals
+		mc_rsp_push          : in std_logic;
+		mc_rsp_stall         : out std_logic;
+		mc_rsp_data          : in std_logic_vector(63 downto 0);
+		mc_rsp_rdctl         : in std_logic_vector(31 downto 0);
+		-- MC flush signals
+		mc_req_flush         : out std_logic;
+		mc_rsp_flush_cmplt   : in std_logic
+	);
+end scc_kernel;
+
+architecture Behavioral of scc_kernel is
+
+	component scc_process1 is
+		port (
+			-- control signals
+			clk                      : in std_logic;
+			rst                      : in std_logic;
+			enable                   : in std_logic;
+			-- Kernel Parameters
+			kernel_id                : in unsigned(7 downto 0); -- Kernel ID
+			ae_id                    : in std_logic_vector(1 downto 0); -- Application Engine ID
+			kernels_count            : in unsigned(7 downto 0);
+			-- Queue pointers
+			reach_count              : in std_logic_vector(63 downto 0); -- Number of nodes in reachability queue
+			reach_queue              : in std_logic_vector(63 downto 0); -- Reach queue pointer (could be FW or BW reach queue)
+			-- Process 1 signals
+			p1_done                  : out std_logic;
+			-- Process 1 req queue signals
+			p1_req_q_almost_full     : in std_logic;
+			p1_req_q_wr_en           : out std_logic;
+			p1_req_q_din             : out std_logic_vector(63 downto 0)
+		);
+	end component;
+			
+	component scc_process2 is
+		port (
+			-- control signals
+			clk                      : in std_logic;
+			rst                      : in std_logic;
+			enable                   : in std_logic;
+			-- Process 2 information
+			p2_done                  : out std_logic;
+			p2_count                 : out unsigned(63 downto 0);
+			-- Input Graph Pointers (Represented in Custom CSR)
+			rgraph_info              : in std_logic_vector(63 downto 0);
+			scc_results              : in std_logic_vector(63 downto 0);
+			-- Process 2 information
+			p1_done                  : in std_logic;
+			p1_count                 : in unsigned(63 downto 0);
+			-- Process 2 SCC req queue signals
+			p2_scc_req_almost_full   : in std_logic;
+			p2_scc_req_wr_en         : out std_logic;
+			p2_scc_req_din           : out std_logic_vector(63 downto 0);
+			-- Process 2 rInfo req queue signals
+			p2_rInfo_req_almost_full : in std_logic;
+			p2_rInfo_req_wr_en       : out std_logic;
+			p2_rInfo_req_din         : out std_logic_vector(63 downto 0);
+			-- MC response port signals
+			mc_rsp_push              : in std_logic;
+			mc_rsp_data              : in std_logic_vector(63 downto 0);
+			mc_rsp_rdctl             : in std_logic_vector(31 downto 0)
+		);
+	end component;
+
+	component scc_process3 is
+		port (
+			-- control signals
+			clk                      : in std_logic;
+			rst                      : in std_logic;
+			enable                   : in std_logic;
+			-- Process 3 information 
+			p3_done                  : out std_logic;
+			p3_count                 : out unsigned(63 downto 0);
+			-- Input Graph Pointers  (Represented in Custom CSR)
+			graph_info               : in std_logic_vector(63 downto 0);
+			scc_results              : in std_logic_vector(63 downto 0);
+			-- Process 2 information 
+			p2_done                  : in std_logic;
+			p2_count                 : in unsigned(63 downto 0);
+			-- Process 3 scc wr queue signals
+			p3_scc_addr_almost_full  : in std_logic;
+			p3_scc_addr_wr_en        : out std_logic;
+			p3_scc_addr_din          : out std_logic_vector(63 downto 0);
+			-- Process 3 info req queue signals
+			p3_info_req_almost_full  : in std_logic;
+			p3_info_req_wr_en        : out std_logic;
+			p3_info_req_din          : out std_logic_vector(63 downto 0);
+			-- Process 3 id queue signals
+			p3_id_q_almost_full      : in std_logic;
+			p3_id_q_wr_en            : out std_logic;
+			p3_id_q_din              : out std_logic_vector(63 downto 0);
+			-- Process 1 response queue signals
+			p1_rsp_q_rd_enb          : out std_logic;
+			p1_rsp_q_dout            : in std_logic_vector(63 downto 0);
+			p1_rsp_q_valid           : in std_logic;
+			p1_rsp_q_empty           : in std_logic;
+			-- Process 2 SCC response queue signals
+			p2_scc_rsp_rd_enb        : out std_logic;
+			p2_scc_rsp_dout          : in std_logic_vector(0 downto 0);
+			p2_scc_rsp_valid         : in std_logic;
+			p2_scc_rsp_empty         : in std_logic;
+			-- Process 2 rInfo response queue signals
+			p2_rinfo_rsp_rd_enb      : out std_logic;
+			p2_rinfo_rsp_dout        : in std_logic_vector(0 downto 0);
+			p2_rinfo_rsp_valid       : in std_logic;
+			p2_rinfo_rsp_empty       : in std_logic
+		);
+	end component;
+
+	component scc_master is
+		port (
+			-- control signals
+			clk                      : in std_logic;
+			rst                      : in std_logic;
+			enable                   : in std_logic;
+			done                     : out std_logic;
+			-- Input Graph Pointers (Represented in Custom CSR)
+			graph_info               : in std_logic_vector(63 downto 0);
+			-- SCC intersection parameters
+			color                    : in std_logic_vector(63 downto 0);
+			-- Process 1 signals
+			p1_req_q_rd_enb          : out std_logic;
+			p1_req_q_dout            : in std_logic_vector(63 downto 0);
+			p1_req_q_valid           : in std_logic;
+			p1_req_q_empty           : in std_logic;
+			p1_rsp_q_wr_en           : out std_logic;
+			p1_rsp_q_din             : out std_logic_vector(63 downto 0);
+			p1_rsp_q_almost_full     : in std_logic;
+			-- Process 2 signals
+			p2_scc_req_rd_enb        : out std_logic;
+			p2_scc_req_dout          : in std_logic_vector(63 downto 0);
+			p2_scc_req_valid         : in std_logic;
+			p2_scc_req_empty         : in std_logic;
+			p2_scc_req_almost_full   : in std_logic;
+			p2_rinfo_req_rd_enb      : out std_logic;
+			p2_rinfo_req_dout        : in std_logic_vector(63 downto 0);
+			p2_rinfo_req_valid       : in std_logic;
+			p2_rinfo_req_empty       : in std_logic;
+			p2_rinfo_req_almost_full : in std_logic;
+			p2_scc_rsp_wr_en         : out std_logic;
+			p2_scc_rsp_din           : out std_logic_vector(0 downto 0);
+			p2_scc_rsp_almost_full   : in std_logic;
+			p2_rinfo_rsp_wr_en       : out std_logic;
+			p2_rinfo_rsp_din         : out std_logic_vector(0 downto 0);
+			p2_rinfo_rsp_almost_full : in std_logic;
+			-- Process 3 signals
+			p3_done                  : in std_logic;
+			p3_scc_addr_rd_enb       : out std_logic;
+			p3_scc_addr_dout         : in std_logic_vector(63 downto 0);
+			p3_scc_addr_valid        : in std_logic;
+			p3_scc_addr_empty        : in std_logic;
+			p3_info_req_rd_enb       : out std_logic;
+			p3_info_req_dout         : in std_logic_vector(63 downto 0);
+			p3_info_req_valid        : in std_logic;
+			p3_info_req_empty        : in std_logic;
+			p3_id_q_rd_enb           : out std_logic;
+			p3_id_q_dout             : in std_logic_vector(63 downto 0);
+			p3_id_q_valid            : in std_logic;
+			p3_id_q_empty            : in std_logic;
+			p3_info_rsp_rd_enb       : out std_logic;
+			p3_info_rsp_dout         : in std_logic_vector(63 downto 0);
+			p3_info_rsp_valid        : in std_logic;
+			p3_info_rsp_empty        : in std_logic;
+			p3_info_rsp_wr_en        : out std_logic;
+			p3_info_rsp_din          : out std_logic_vector(63 downto 0);
+			p3_info_rsp_almost_full  : in std_logic;
+			-- MC request port signals
+			mc_req_ld                : out std_logic;
+			mc_req_st                : out std_logic;
+			mc_req_size              : out std_logic_vector(1 downto 0);
+			mc_req_vaddr             : out std_logic_vector(47 downto 0);
+			mc_req_wrd_rdctl         : out std_logic_vector(63 downto 0);
+			mc_rd_rq_stall           : in std_logic;
+			mc_wr_rq_stall           : in std_logic;
+			-- MC response port signals
+			mc_rsp_push              : in std_logic;
+			mc_rsp_stall             : out std_logic;
+			mc_rsp_data              : in std_logic_vector(63 downto 0);
+			mc_rsp_rdctl             : in std_logic_vector(31 downto 0)
+		);
+	end component;
+	
+	component fifo_generator_64_16 is
+		PORT (
+			clk                  : in std_logic;
+			rst                  : in std_logic;
+			din                  : in std_logic_vector(63 downto 0);
+			wr_en                : in std_logic;
+			rd_en                : in std_logic;
+			dout                 : out std_logic_vector(63 downto 0);
+			full                 : out std_logic;
+			almost_full          : out std_logic;
+			empty                : out std_logic;
+			valid                : out std_logic
+		);
+	end component;
+
+	component fifo_generator_1_d512 is
+		PORT (
+			clk                  : in std_logic;
+			rst                  : in std_logic;
+			din                  : in std_logic_vector(0 downto 0);
+			wr_en                : in std_logic;
+			rd_en                : in std_logic;
+			dout                 : out std_logic_vector(0 downto 0);
+			full                 : out std_logic;
+			almost_full          : out std_logic;
+			empty                : out std_logic;
+			valid                : out std_logic
+		);
+	end component;
+
+	component fifo_generator_64_512 is
+		PORT (
+			clk                  : in std_logic;
+			rst                  : in std_logic;
+			din                  : in std_logic_vector(63 downto 0);
+			wr_en                : in std_logic;
+			rd_en                : in std_logic;
+			dout                 : out std_logic_vector(63 downto 0);
+			full                 : out std_logic;
+			almost_full          : out std_logic;
+			empty                : out std_logic;
+			valid                : out std_logic
+		);
+	end component;
+
+	component fifo_generator_64_d16 is
+		PORT (
+			clk                  : in std_logic;
+			rst                  : in std_logic;
+			din                  : in std_logic_vector(63 downto 0);
+			wr_en                : in std_logic;
+			rd_en                : in std_logic;
+			dout                 : out std_logic_vector(63 downto 0);
+			full                 : out std_logic;
+			almost_full          : out std_logic;
+			empty                : out std_logic;
+			valid                : out std_logic
+		);
+	end component;
+
+	-- KERNEL CONTROL signals
+	signal k_rst                    : std_logic;
+	signal k_busy                   : std_logic;
+	signal k_done                   : std_logic;
+	signal started                  : std_logic;
+	signal info_addr                : std_logic_vector(63 downto 0);
+	signal rinfo_addr               : std_logic_vector(63 downto 0);
+	signal reach_queue              : std_logic_vector(63 downto 0);
+	signal reach_count              : std_logic_vector(63 downto 0);
+	signal found_nextv              : std_logic; -- 1 if found a possible next start
+	signal nextk_done_cache         : std_logic;
+
+	type state_type is (st_idle, st_fw, st_fw_wait, st_bw, st_bw_wait, st_search, st_search_wait, st_flush, st_done);
+	signal kernel_state             : state_type;
+	
+	-- Master process signals
+	signal master_done              : std_logic;
+	
+	-- Process 1 signals
+	signal p1_done                  : std_logic;
+	signal p1_count                 : unsigned(63 downto 0);
+	signal p1_req_q_rd_enb          : std_logic;
+	signal p1_rsp_q_rd_enb          : std_logic;
+
+	signal p1_req_q_almost_full     : std_logic;
+	signal p1_req_q_wr_en           : std_logic;
+	signal p1_req_q_rd_en           : std_logic;
+	signal p1_req_q_din             : std_logic_vector(63 downto 0);
+	signal p1_req_q_dout            : std_logic_vector(63 downto 0);
+	signal p1_req_q_valid           : std_logic;
+	signal p1_req_q_full            : std_logic;
+	signal p1_req_q_empty           : std_logic;
+	
+	signal p1_rsp_q_almost_full     : std_logic;
+	signal p1_rsp_q_wr_en           : std_logic;
+	signal p1_rsp_q_rd_en           : std_logic;
+	signal p1_rsp_q_din             : std_logic_vector(63 downto 0);
+	signal p1_rsp_q_dout            : std_logic_vector(63 downto 0);
+	signal p1_rsp_q_valid           : std_logic;
+	signal p1_rsp_q_full            : std_logic;
+	signal p1_rsp_q_empty           : std_logic;
+	
+	-- Process 2 signals
+	signal p2_done                  : std_logic;
+	signal p2_count                 : unsigned(63 downto 0);
+	signal p2_scc_req_rd_enb        : std_logic;
+	signal p2_rinfo_req_rd_enb      : std_logic;
+	signal p2_scc_rsp_rd_enb        : std_logic;
+	signal p2_rinfo_rsp_rd_enb      : std_logic;
+	
+	signal p2_scc_req_almost_full   : std_logic;
+	signal p2_scc_req_wr_en         : std_logic;
+	signal p2_scc_req_rd_en         : std_logic;
+	signal p2_scc_req_din           : std_logic_vector(63 downto 0);
+	signal p2_scc_req_dout          : std_logic_vector(63 downto 0);
+	signal p2_scc_req_valid         : std_logic;
+	signal p2_scc_req_full          : std_logic;
+	signal p2_scc_req_empty         : std_logic;
+	
+	signal p2_rinfo_req_almost_full : std_logic;
+	signal p2_rinfo_req_wr_en       : std_logic;
+	signal p2_rinfo_req_rd_en       : std_logic;
+	signal p2_rinfo_req_din         : std_logic_vector(63 downto 0);
+	signal p2_rinfo_req_dout        : std_logic_vector(63 downto 0);
+	signal p2_rinfo_req_valid       : std_logic;
+	signal p2_rinfo_req_full        : std_logic;
+	signal p2_rinfo_req_empty       : std_logic;
+	
+	signal p2_scc_rsp_almost_full   : std_logic;
+	signal p2_scc_rsp_wr_en         : std_logic;
+	signal p2_scc_rsp_rd_en         : std_logic;
+	signal p2_scc_rsp_din           : std_logic_vector(0 downto 0);
+	signal p2_scc_rsp_dout          : std_logic_vector(0 downto 0);
+	signal p2_scc_rsp_valid         : std_logic;
+	signal p2_scc_rsp_full          : std_logic;
+	signal p2_scc_rsp_empty         : std_logic;
+	
+	signal p2_rinfo_rsp_almost_full : std_logic;
+	signal p2_rinfo_rsp_wr_en       : std_logic;
+	signal p2_rinfo_rsp_rd_en       : std_logic;
+	signal p2_rinfo_rsp_din         : std_logic_vector(0 downto 0);
+	signal p2_rinfo_rsp_dout        : std_logic_vector(0 downto 0);
+	signal p2_rinfo_rsp_valid       : std_logic;
+	signal p2_rinfo_rsp_full        : std_logic;
+	signal p2_rinfo_rsp_empty       : std_logic;
+	
+	-- Process 3 signals
+	signal p3_done                  : std_logic;
+	signal p3_count                 : unsigned(63 downto 0);
+	signal p3_scc_addr_rd_enb       : std_logic;
+	signal p3_info_req_rd_enb       : std_logic;
+	signal p3_id_q_rd_enb           : std_logic;
+	signal p3_info_rsp_rd_enb       : std_logic;
+	
+	signal p3_scc_addr_almost_full  : std_logic;
+	signal p3_scc_addr_wr_en        : std_logic;
+	signal p3_scc_addr_rd_en        : std_logic;
+	signal p3_scc_addr_din          : std_logic_vector(63 downto 0);
+	signal p3_scc_addr_dout         : std_logic_vector(63 downto 0);
+	signal p3_scc_addr_valid        : std_logic;
+	signal p3_scc_addr_full         : std_logic;
+	signal p3_scc_addr_empty        : std_logic;
+	
+	signal p3_info_req_almost_full  : std_logic;
+	signal p3_info_req_wr_en        : std_logic;
+	signal p3_info_req_rd_en        : std_logic;
+	signal p3_info_req_din          : std_logic_vector(63 downto 0);
+	signal p3_info_req_dout         : std_logic_vector(63 downto 0);
+	signal p3_info_req_valid        : std_logic;
+	signal p3_info_req_full         : std_logic;
+	signal p3_info_req_empty        : std_logic;
+	
+	signal p3_id_q_almost_full      : std_logic;
+	signal p3_id_q_wr_en            : std_logic;
+	signal p3_id_q_rd_en            : std_logic;
+	signal p3_id_q_din              : std_logic_vector(63 downto 0);
+	signal p3_id_q_dout             : std_logic_vector(63 downto 0);
+	signal p3_id_q_valid            : std_logic;
+	signal p3_id_q_full             : std_logic;
+	signal p3_id_q_empty            : std_logic;
+	
+	signal p3_info_rsp_almost_full  : std_logic;
+	signal p3_info_rsp_wr_en        : std_logic;
+	signal p3_info_rsp_rd_en        : std_logic;
+	signal p3_info_rsp_din          : std_logic_vector(63 downto 0);
+	signal p3_info_rsp_dout         : std_logic_vector(63 downto 0);
+	signal p3_info_rsp_valid        : std_logic;
+	signal p3_info_rsp_full         : std_logic;
+	signal p3_info_rsp_empty        : std_logic;
+
+	-- Queues masks make sure that rd signals of synched queus are synched correctly
+	signal queues_mask1             : std_logic;
+	signal queues_mask2             : std_logic;
+
+begin
+
+	busy               <= k_busy or nextk_busy;
+	done               <= k_done;
+
+	-- mask rd enable signals with empty signals
+	queues_mask1       <= not (p1_rsp_q_empty or p2_scc_rsp_empty or p2_rinfo_rsp_empty);
+	queues_mask2       <= not (p3_id_q_empty or p3_info_rsp_empty);
+	p1_req_q_rd_en     <= p1_req_q_rd_enb and not p1_req_q_empty;
+	p1_rsp_q_rd_en     <= p1_rsp_q_rd_enb and queues_mask1;
+	p2_scc_req_rd_en   <= p2_scc_req_rd_enb and not p2_scc_req_empty;
+	p2_rinfo_req_rd_en <= p2_rinfo_req_rd_enb and not p2_rinfo_req_empty;
+	p2_scc_rsp_rd_en   <= p2_scc_rsp_rd_enb and queues_mask1;
+	p2_rinfo_rsp_rd_en <= p2_rinfo_rsp_rd_enb and queues_mask1;
+	p3_scc_addr_rd_en  <= p3_scc_addr_rd_enb and not p3_scc_addr_empty;
+	p3_info_req_rd_en  <= p3_info_req_rd_enb and not p3_info_req_empty;
+	p3_id_q_rd_en      <= p3_id_q_rd_enb and queues_mask2;
+	p3_info_rsp_rd_en  <= p3_info_rsp_rd_enb and queues_mask2;
+
+	p1: scc_process1
+	port map (
+		-- control signals
+		clk                  => clk,
+		rst                  => k_rst,
+		enable               => started,
+		-- Kernel Parameters
+		kernel_id            => kernel_id,
+		ae_id                => ae_id,
+		kernels_count        => kernels_count,
+		-- Queue pointers
+		reach_count          => reach_count,
+		reach_queue          => reach_queue,
+		-- Process 1 signals
+		p1_done              => p1_done,
+		-- Process 1 req queue signals
+		p1_req_q_almost_full => p1_req_q_almost_full,
+		p1_req_q_wr_en       => p1_req_q_wr_en,
+		p1_req_q_din         => p1_req_q_din
+	);
+
+	p2: scc_process2
+	port map (
+		-- control signals
+		clk                      => clk,
+		rst                      => k_rst,
+		enable                   => started,
+		-- Process 2 information
+		p2_done                  => p2_done,
+		p2_count                 => p2_count,
+		-- Input Graph Pointers (Represented in Custom CSR)
+		rgraph_info              => rinfo_addr,
+		scc_results              => scc_results,
+		-- Process 2 information
+		p1_done                  => p1_done,
+		p1_count                 => p1_count,
+		-- Process 2 SCC req queue signals
+		p2_scc_req_almost_full   => p2_scc_req_almost_full,
+		p2_scc_req_wr_en         => p2_scc_req_wr_en,
+		p2_scc_req_din           => p2_scc_req_din,
+		-- Process 2 rInfo req queue signals
+		p2_rInfo_req_almost_full => p2_rInfo_req_almost_full,
+		p2_rInfo_req_wr_en       => p2_rInfo_req_wr_en,
+		p2_rInfo_req_din         => p2_rInfo_req_din,
+		-- MC response port signals
+		mc_rsp_push              => mc_rsp_push,
+		mc_rsp_data              => mc_rsp_data,
+		mc_rsp_rdctl             => mc_rsp_rdctl
+	);
+
+	p3: scc_process3
+	port map (
+		-- control signals
+		clk                     => clk,
+		rst                     => k_rst,
+		enable                  => started,
+		-- Process 3 information
+		p3_done                 => p3_done,
+		p3_count                => p3_count,
+		-- Input Graph Pointers (Represented in Custom CSR)
+		graph_info              => info_addr,
+		scc_results             => scc_results,
+		-- Process 2 information
+		p2_done                 => p2_done,
+		p2_count                => p2_count,
+		-- Process 3 scc wr queue signals
+		p3_scc_addr_almost_full => p3_scc_addr_almost_full,
+		p3_scc_addr_wr_en       => p3_scc_addr_wr_en,
+		p3_scc_addr_din         => p3_scc_addr_din,
+		-- Process 3 info req queue signals
+		p3_info_req_almost_full => p3_info_req_almost_full,
+		p3_info_req_wr_en       => p3_info_req_wr_en,
+		p3_info_req_din         => p3_info_req_din,
+		-- Process 3 id queue signals
+		p3_id_q_almost_full     => p3_id_q_almost_full,
+		p3_id_q_wr_en           => p3_id_q_wr_en,
+		p3_id_q_din             => p3_id_q_din,
+		-- Process 1 response queue signals
+		p1_rsp_q_rd_enb         => p1_rsp_q_rd_enb,
+		p1_rsp_q_dout           => p1_rsp_q_dout,
+		p1_rsp_q_valid          => p1_rsp_q_valid,
+		p1_rsp_q_empty          => p1_rsp_q_empty,
+		-- Process 2 SCC response queue signals
+		p2_scc_rsp_rd_enb       => p2_scc_rsp_rd_enb,
+		p2_scc_rsp_dout         => p2_scc_rsp_dout,
+		p2_scc_rsp_valid        => p2_scc_rsp_valid,
+		p2_scc_rsp_empty        => p2_scc_rsp_empty,
+		-- Process 2 rInfo response queue signals
+		p2_rinfo_rsp_rd_enb     => p2_rinfo_rsp_rd_enb,
+		p2_rinfo_rsp_dout       => p2_rinfo_rsp_dout,
+		p2_rinfo_rsp_valid      => p2_rinfo_rsp_valid,
+		p2_rinfo_rsp_empty      => p2_rinfo_rsp_empty
+	);
+
+	p_master: scc_master
+	port map (
+		-- control signals
+		clk                      => clk,
+		rst                      => k_rst,
+		enable                   => started,
+		done                     => master_done,
+		-- Input Graph Pointers (Represented in Custom CSR)
+		graph_info               => info_addr,
+		-- SCC intersection parameters
+		color                    => color,
+		-- Process 1 signals
+		p1_req_q_rd_enb          => p1_req_q_rd_enb,
+		p1_req_q_dout            => p1_req_q_dout,
+		p1_req_q_valid           => p1_req_q_valid,
+		p1_req_q_empty           => p1_req_q_empty,
+		p1_rsp_q_wr_en           => p1_rsp_q_wr_en,
+		p1_rsp_q_din             => p1_rsp_q_din,
+		p1_rsp_q_almost_full     => p1_rsp_q_almost_full,
+		-- Process 2 signals
+		p2_scc_req_rd_enb        => p2_scc_req_rd_enb,
+		p2_scc_req_dout          => p2_scc_req_dout,
+		p2_scc_req_valid         => p2_scc_req_valid,
+		p2_scc_req_empty         => p2_scc_req_empty,
+		p2_scc_req_almost_full   => p2_scc_req_almost_full,
+		p2_rinfo_req_rd_enb      => p2_rinfo_req_rd_enb,
+		p2_rinfo_req_dout        => p2_rinfo_req_dout,
+		p2_rinfo_req_valid       => p2_rinfo_req_valid,
+		p2_rinfo_req_empty       => p2_rinfo_req_empty,
+		p2_rinfo_req_almost_full => p2_rinfo_req_almost_full,
+		p2_scc_rsp_wr_en         => p2_scc_rsp_wr_en,
+		p2_scc_rsp_din           => p2_scc_rsp_din,
+		p2_scc_rsp_almost_full   => p2_scc_rsp_almost_full,
+		p2_rinfo_rsp_wr_en       => p2_rinfo_rsp_wr_en,
+		p2_rinfo_rsp_din         => p2_rinfo_rsp_din,
+		p2_rinfo_rsp_almost_full => p2_rinfo_rsp_almost_full,
+		-- Process 3 signals
+		p3_done                  => p3_done,
+		p3_scc_addr_rd_enb       => p3_scc_addr_rd_enb,
+		p3_scc_addr_dout         => p3_scc_addr_dout,
+		p3_scc_addr_valid        => p3_scc_addr_valid,
+		p3_scc_addr_empty        => p3_scc_addr_empty,
+		p3_info_req_rd_enb       => p3_info_req_rd_enb,
+		p3_info_req_dout         => p3_info_req_dout,
+		p3_info_req_valid        => p3_info_req_valid,
+		p3_info_req_empty        => p3_info_req_empty,
+		p3_id_q_rd_enb           => p3_id_q_rd_enb,
+		p3_id_q_dout             => p3_id_q_dout,
+		p3_id_q_valid            => p3_id_q_valid,
+		p3_id_q_empty            => p3_id_q_empty,
+		p3_info_rsp_rd_enb       => p3_info_rsp_rd_enb,
+		p3_info_rsp_dout         => p3_info_rsp_dout,
+		p3_info_rsp_valid        => p3_info_rsp_valid,
+		p3_info_rsp_empty        => p3_info_rsp_empty,
+		p3_info_rsp_wr_en        => p3_info_rsp_wr_en,
+		p3_info_rsp_din          => p3_info_rsp_din,
+		p3_info_rsp_almost_full  => p3_info_rsp_almost_full,
+		-- MC request port signals
+		mc_req_ld                => mc_req_ld,
+		mc_req_st                => mc_req_st,
+		mc_req_size              => mc_req_size,
+		mc_req_vaddr             => mc_req_vaddr,
+		mc_req_wrd_rdctl         => mc_req_wrd_rdctl,
+		mc_rd_rq_stall           => mc_rd_rq_stall,
+		mc_wr_rq_stall           => mc_wr_rq_stall,
+		-- MC response port signals
+		mc_rsp_push              => mc_rsp_push,
+		mc_rsp_stall             => mc_rsp_stall,
+		mc_rsp_data              => mc_rsp_data,
+		mc_rsp_rdctl             => mc_rsp_rdctl
+	);
+
+	-- Process 1 request queue
+	p1_req_q : fifo_generator_64_16
+	port map (
+		clk					=> clk,
+		rst					=> k_rst,
+		almost_full			=> p1_req_q_almost_full,
+		wr_en				=> p1_req_q_wr_en,
+		rd_en				=> p1_req_q_rd_enb,
+		din					=> p1_req_q_din,
+		dout				=> p1_req_q_dout,
+		full				=> p1_req_q_full,
+		empty				=> p1_req_q_empty,
+		valid				=> p1_req_q_valid
+	);
+
+	-- process 1 response queue
+	p1_rsp_q : fifo_generator_64_512
+	port map (
+		clk					=> clk,
+		rst					=> k_rst,
+		almost_full			=> p1_rsp_q_almost_full,
+		wr_en				=> p1_rsp_q_wr_en,
+		rd_en				=> p1_rsp_q_rd_en,
+		din					=> p1_rsp_q_din,
+		dout				=> p1_rsp_q_dout,
+		full				=> p1_rsp_q_full,
+		empty				=> p1_rsp_q_empty,
+		valid				=> p1_rsp_q_valid
+	);
+
+	-- process 2 SCC request queue
+	p2_scc_req_q : fifo_generator_64_512
+	port map (
+		clk					=> clk,
+		rst					=> k_rst,
+		almost_full			=> p2_scc_req_almost_full,
+		wr_en				=> p2_scc_req_wr_en,
+		rd_en				=> p2_scc_req_rd_en,
+		din					=> p2_scc_req_din,
+		dout				=> p2_scc_req_dout,
+		full				=> p2_scc_req_full,
+		empty				=> p2_scc_req_empty,
+		valid				=> p2_scc_req_valid
+	);
+
+	-- process 2 rInfo request queue
+	p2_rinfo_req_q : fifo_generator_64_512
+	port map (
+		clk					=> clk,
+		rst					=> k_rst,
+		almost_full			=> p2_rinfo_req_almost_full,
+		wr_en				=> p2_rinfo_req_wr_en,
+		rd_en				=> p2_rinfo_req_rd_en,
+		din					=> p2_rinfo_req_din,
+		dout				=> p2_rinfo_req_dout,
+		full				=> p2_rinfo_req_full,
+		empty				=> p2_rinfo_req_empty,
+		valid				=> p2_rinfo_req_valid
+	);
+
+	-- process 2 SCC response queue
+	p2_scc_rsp_q : fifo_generator_1_d512
+	port map (
+		clk					=> clk,
+		rst					=> k_rst,
+		almost_full			=> p2_scc_rsp_almost_full,
+		wr_en				=> p2_scc_rsp_wr_en,
+		rd_en				=> p2_scc_rsp_rd_en,
+		din					=> p2_scc_rsp_din,
+		dout				=> p2_scc_rsp_dout,
+		full				=> p2_scc_rsp_full,
+		empty				=> p2_scc_rsp_empty,
+		valid				=> p2_scc_rsp_valid
+	);
+
+	-- process 2 rInfo response queue
+	p2_rinfo_rsp_q : fifo_generator_1_d512
+	port map (
+		clk					=> clk,
+		rst					=> k_rst,
+		almost_full			=> p2_rinfo_rsp_almost_full,
+		wr_en				=> p2_rinfo_rsp_wr_en,
+		rd_en				=> p2_rinfo_rsp_rd_en,
+		din					=> p2_rinfo_rsp_din,
+		dout				=> p2_rinfo_rsp_dout,
+		full				=> p2_rinfo_rsp_full,
+		empty				=> p2_rinfo_rsp_empty,
+		valid				=> p2_rinfo_rsp_valid
+	);
+
+	-- process 3 scc write request queue (nodes to be colored)
+	p3_scc_addr_q : fifo_generator_64_16
+	port map (
+		clk					=> clk,
+		rst					=> k_rst,
+		almost_full			=> p3_scc_addr_almost_full,
+		wr_en				=> p3_scc_addr_wr_en,
+		rd_en				=> p3_scc_addr_rd_en,
+		din					=> p3_scc_addr_din,
+		dout				=> p3_scc_addr_dout,
+		full				=> p3_scc_addr_full,
+		empty				=> p3_scc_addr_empty,
+		valid				=> p3_scc_addr_valid
+	);
+
+	-- process 3 info request queue
+	p3_info_req_q : fifo_generator_64_16
+	port map (
+		clk					=> clk,
+		rst					=> k_rst,
+		almost_full			=> p3_info_req_almost_full,
+		wr_en				=> p3_info_req_wr_en,
+		rd_en				=> p3_info_req_rd_en,
+		din					=> p3_info_req_din,
+		dout				=> p3_info_req_dout,
+		full				=> p3_info_req_full,
+		empty				=> p3_info_req_empty,
+		valid				=> p3_info_req_valid
+	);
+
+	-- process 3 id queue (nodes that have to be recovered)
+	p3_id_q : fifo_generator_64_16
+	port map (
+		clk					=> clk,
+		rst					=> k_rst,
+		almost_full			=> p3_id_q_almost_full,
+		wr_en				=> p3_id_q_wr_en,
+		rd_en				=> p3_id_q_rd_en,
+		din					=> p3_id_q_din,
+		dout				=> p3_id_q_dout,
+		full				=> p3_id_q_full,
+		empty				=> p3_id_q_empty,
+		valid				=> p3_id_q_valid
+	);
+
+	-- process 3 info response queue
+	p3_info_rsp_q : fifo_generator_64_512
+	port map (
+		clk					=> clk,
+		rst					=> k_rst,
+		almost_full			=> p3_info_rsp_almost_full,
+		wr_en				=> p3_info_rsp_wr_en,
+		rd_en				=> p3_info_rsp_rd_en,
+		din					=> p3_info_rsp_din,
+		dout				=> p3_info_rsp_dout,
+		full				=> p3_info_rsp_full,
+		empty				=> p3_info_rsp_empty,
+		valid				=> p3_info_rsp_valid
+	);
+
+	-- Avoid rst signal fanout problem
+	p_rst : process(clk)
+	begin
+		if (rising_edge(clk)) then
+			k_rst <= rst;
+
+			if (k_rst = '1') then
+				nxtk_rst          <= '0';
+				nxtk_enable       <= '0';
+				nxtk_N            <= (others => '0');
+				nxtk_graph_info   <= (others => '0');
+				nxtk_rgraph_info  <= (others => '0');
+				nxtk_color        <= (others => '0');
+				nxtk_fw_queue     <= (others => '0');
+				nxtk_fw_count     <= (others => '0');
+				nxtk_bw_queue     <= (others => '0');
+				nxtk_bw_count     <= (others => '0');
+				nxtk_scc_results  <= (others => '0');
+				nextk_done_cache  <= '0';
+			else
+				if (nextk_done = '1') then
+					nextk_done_cache  <= '1';
+				end if;
+
+				nxtk_rst         <= rst;
+				nxtk_enable      <= enable;
+				nxtk_N           <= N;
+				nxtk_graph_info  <= graph_info;
+				nxtk_rgraph_info <= rgraph_info;
+				nxtk_color       <= color;
+				nxtk_fw_queue    <= fw_queue;
+				nxtk_fw_count    <= fw_count;
+				nxtk_bw_queue    <= bw_queue;
+				nxtk_bw_count    <= bw_count;
+				nxtk_scc_results <= scc_results;
+			end if;
+		end if;
+	end process; -- rst
+
+	-- KERNEL CONTROL
+	p0 : process(clk, k_rst)
+	begin
+		if rising_edge(clk) then
+			if (k_rst = '1') then
+				k_busy       <= '0';
+				k_done       <= '0';
+				started      <= '0';
+				info_addr    <= (others => '0');
+				rinfo_addr   <= (others => '0');
+				reach_queue  <= (others => '0');
+				reach_count  <= (others => '0');
+				mc_req_flush <= '0';
+				kernel_state <= st_idle;
+			else
+				case(kernel_state) is
+					when st_idle =>
+						k_done           <= '0';
+						if (enable = '1') then
+							k_busy       <= '1';
+							started      <= '1';
+							info_addr    <= graph_info;
+							rinfo_addr   <= rgraph_info;
+							reach_queue  <= fw_queue;
+							reach_count  <= fw_count;
+							kernel_state <= st_fw_wait;
+						else
+							k_busy       <= '0';
+							started      <= '0';
+							info_addr    <= (others => '0');
+							rinfo_addr   <= (others => '0');
+							reach_queue  <= (others => '0');
+							reach_count  <= (others => '0');
+							kernel_state <= st_idle;
+						end if ;
+					when st_fw_wait =>
+						if (master_done = '1') then
+							started		 <= '0';
+							kernel_state <= st_bw;
+						else
+							started		 <= '1';
+							kernel_state <= st_fw_wait;
+						end if;
+					when st_bw =>
+						started          <= '1';
+						info_addr        <= rgraph_info;
+						rinfo_addr       <= graph_info;
+						reach_queue      <= bw_queue;
+						reach_count      <= bw_count;
+						kernel_state     <= st_bw_wait;
+					when st_bw_wait =>
+						if (master_done = '1') then
+							started		 <= '0';
+							mc_req_flush <= '1';
+							kernel_state <= st_flush;
+						-- elsif (master_done = '1' and found_nextv = '0') then
+						--	started      <= '0';
+						--	kernel_state <= st_search;
+						else
+							started		 <= '1';
+							kernel_state <= st_bw_wait;
+						end if;
+					when st_flush =>
+						mc_req_flush     <= '0';
+						if (mc_rsp_flush_cmplt = '1') then
+							kernel_state <= st_done;
+						else
+							kernel_state <= st_flush;
+						end if;
+					when st_done =>
+						if (nextk_done_cache = '1') then
+							k_busy           <= '0';
+							k_done           <= '1';
+							started          <= '0';
+							kernel_state     <= st_idle;
+						else
+							kernel_state     <= st_done;
+						end if;
+					when others =>
+						kernel_state     <= st_idle;
+				end case ;
+			end if; -- end if rst
+		end if; -- end if clk
+	end process; -- end process 0
+
+	-- Kernel-to-kernel communication
+	k2k : process(clk, k_rst)
+	begin
+		if rising_edge(clk) then
+			if (k_rst = '1') then
+				found_nextv          <= '0';
+				kernel_tx_vld        <= '0';
+				kernel_tx_nextv      <= (others => '0');
+			else
+				if (enable = '1') then
+					found_nextv      <= '0';
+					kernel_tx_vld    <= '0';
+					kernel_tx_nextv  <= (others => '0');
+				elsif (kernel_rx_vld = '1' and found_nextv = '0') then
+					found_nextv      <= '1';
+					kernel_tx_vld    <= '1';
+					kernel_tx_nextv  <= kernel_rx_nextv;
+				-- elsif (kernel_state = st_search and mc_rsp_push = '1' and mc_rsp_rdctl(7 downto 0) = x"07") then
+				--	found_nextv      <= '1';
+				--	kernel_tx_vld    <= '1';
+				--	kernel_tx_nextv  <= mc_rsp_data;
+				elsif (p3_id_q_wr_en = '1' and found_nextv = '0') then
+					found_nextv      <= '1';
+					kernel_tx_vld    <= '1';
+					kernel_tx_nextv  <= p1_rsp_q_dout; -- kernel_tx_nextv   <= p3_id_q_din;
+				else
+					kernel_tx_vld    <= '0';
+					found_nextv      <= found_nextv;
+				end if;
+			end if; -- end if rst
+		end if; -- end if clk
+	end process; -- end process requests multiplexer
+
+	p1count : process (clk, k_rst)
+	begin
+		if (rising_edge(clk)) then
+			if (k_rst = '1' or started /= '1') then
+				p1_count <= (others => '0');
+			else
+				if (p1_req_q_wr_en = '1') then
+					p1_count <= p1_count + 1;
+				end if;
+			end if;
+		end if;
+	end process; -- p1count
+
+end Behavioral;
