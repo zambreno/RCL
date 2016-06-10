@@ -1,0 +1,9 @@
+unselect -all
+select net 'i1'
+select net 'i2'
+select net 'rstin'
+routecst
+exit
+exit
+exit
+

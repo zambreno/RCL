@@ -1,0 +1,38 @@
+IN_SRC_NAME=puf_sram
+IN_UCF_NAME=puf_sram
+SPARTAN3E=xc3s1200e-5fg320
+SPARTAN6=xc6slx45-3csg324
+ZYNQ=xc7z020-1clg484
+DEVICE=$(ZYNQ)
+
+LANG=VHDL
+default: 	$(IN_SRC_NAME).bin
+$(IN_SRC_NAME).ngc: $(IN_SRC_NAME).vhd
+	echo "run -ifn $(IN_SRC_NAME).vhd -ifmt $(LANG) -ofn $(IN_SRC_NAME) -p \
+	$(DEVICE) -opt_mode Speed -opt_level 1" | xst
+$(IN_SRC_NAME).ngd: $(IN_SRC_NAME).ngc $(IN_UCF_NAME).ucf
+	ngdbuild -p $(DEVICE) -uc  $(IN_UCF_NAME).ucf $(IN_SRC_NAME).ngc
+$(IN_SRC_NAME).ncd: $(IN_SRC_NAME).ngd
+	map  -detail -w -pr b $(IN_SRC_NAME).ngd
+$(IN_SRC_NAME).pcf: $(IN_SRC_NAME).ngd
+	map  -detail -w -pr b $(IN_SRC_NAME).ngd
+parout.ncd: $(IN_SRC_NAME).ncd
+	par $(IN_SRC_NAME).ncd parout.ncd $(IN_SRC_NAME).pcf
+$(IN_SRC_NAME).bit: parout.ncd
+	bitgen -g CRC:Enable -g StartUpClk:CClk -g Compress \
+	$(IN_SRC_NAME).ncd $(IN_SRC_NAME).bit $(IN_SRC_NAME).pcf
+$(IN_SRC_NAME).bin: $(IN_SRC_NAME).bit
+	promgen -w -p bin -o $(IN_SRC_NAME).bin -u 0 $(IN_SRC_NAME).bit
+install: 	$(IN_SRC_NAME).bin
+	stty --file=/dev/ttyUSB0 -opost  # We want raw output
+	cat $(IN_SRC_NAME).bin > /dev/ttyUSB0
+clean:
+	rm -rf $(IN_SRC_NAME).bgn $(IN_SRC_NAME).bin $(IN_SRC_NAME).bit $(IN_SRC_NAME).bld \
+	$(IN_SRC_NAME).drc $(IN_SRC_NAME).map $(IN_SRC_NAME)_map.xrpt $(IN_SRC_NAME).mrp \
+	$(IN_SRC_NAME).ncd $(IN_SRC_NAME).ngc $(IN_SRC_NAME).ngd $(IN_SRC_NAME)_ngdbuild.xrpt \
+	$(IN_SRC_NAME).ngm $(IN_SRC_NAME)_par.xrpt $(IN_SRC_NAME).pcf $(IN_SRC_NAME).prm \
+	$(IN_SRC_NAME)_summary.xml $(IN_SRC_NAME)_usage.xml $(IN_SRC_NAME)_xst.xrpt \
+	netlist.lst parout.ncd parout.pad parout_pad.csv \
+	parout_pad.txt parout.par parout.ptwx parout.unroutes \
+	parout.xpi xlnx_auto_0.ise xlnx_auto_0_xdb xst
+
